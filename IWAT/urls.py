@@ -5,4 +5,5 @@ from login.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^login/$', 'login.views.login_user'),)
+    (r'^login/$', 'login.views.login_user'),
+    )
