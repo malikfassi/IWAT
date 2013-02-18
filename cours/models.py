@@ -1,6 +1,6 @@
 # -*- coding: cp1252 -*-
 from django.db import models
-from profil import Eleve, Professeur
+from login.models import Utilisateur
 
 MATIERES = (
         #Langues
@@ -48,13 +48,14 @@ ANNEE_ETUDE = (
         ('M2', 'Master 2ére'),
     )
 
-class Cour(models.Models):
+class Cour(models.Model):
     secteur = models.CharField(max_length=2, choices=MATIERES)
     anneeSecteur = models.CharField(max_length=2, choices=ANNEE_ETUDE)
-    heure = models.DateField()
-    lieu = CharField(max_length=200)
-    eleve = ForeignKey('profil.Eleve')
-    prof = ForeignKey('profil.Professeur')
+    heure = models.DateTimeField()
+    lieu = models.CharField(max_length=200)
+    eleve = ForeignKey(Utilisateur)
+    prof = ForeignKey(Utilisateur)
     
     def __unicode__(self):
-        return("Eleve : "+eleve.__unicode__()+ " Professeur : " prof.__unicode__() + " Le " + heure + " à " + lieu)
+        #return("Cours de "+ self.secteur+" "+self.anneeSecteur)
+        return("Eleve : "+eleve.__unicode__()+ " Professeur : " + prof.__unicode__() + " Le " + heure + " à " + lieu)
