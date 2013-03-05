@@ -1,23 +1,30 @@
 from django.db import models
-from cours.models import ANNEE_ETUDE
-from cours.models import MATIERES
-from login.models import utilisateur
+from cours.models import CourEvenement
+from login.models import Utilisateur
+from django.forms import ModelForm
 
 class Annonce(models.Model):
-    posterPar = models.ForeignKey(Utilisateur)
-    secteur = models.CharField(max_length = 2, choices = MATIERES)
-    anneeSecteur = models.CharField(max_length = 2, choices = ANNEE_ETUDE)
-    lieu = models.CharField(max_length = 200)
-    date = models.DateField()
+    contexte = models.OneToOneField(CourEvenement, related_name="contexteInAnnonce")
+    posterPar = models.OneToOneField(Utilisateur, related_name="posteurInAnnonce")
 
     def __unicode__(self):
-        return (self.posterPar.__unicode__()+ " cherche un cour de " + self.secteur)
-    
-class ReponsseAnnonce(models.Model):
-    annonceConcernee = models.ForeignKey(Annonce)
-    profRepondant = models.ForeignKey(Utilisateur)
-    messagePerso = CharField(max_length=250)
+        return (self.posterPar.__unicode__()+ " cherche un cour de " + self.contexte.__unicode__())
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class AnnonceForm(ModelForm):
+    class Meta:
+        model = Annonce
+ 
+class Notification(models.Model):
+    emetteur = models.ForeignKey(Utilisateur, related_name="emetteurInNotification")
+    recepteur = models.ForeignKey(Utilisateur, related_name="recepteurInNotification")
+    message = models.CharField(max_length=750)
     vu = models.BooleanField()
-    prix = DecimalFieldField(max_digits=4, decimal_places=2)
-    
-    
+
+    def __unicode__(self):
+        return self.message
+
+    def __repr__(self):
+        return self.__unicode__()

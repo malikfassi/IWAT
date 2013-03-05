@@ -3,28 +3,21 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
-
+from login.models import UtilisateurForm
 
 def login_user(request):
     state = "Please log in below..."
     username = password = ''
     if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = UtilisateurForm(request.POST)
+        if(form.is_valid()):
+            user = authenticate(username = form.profilBase.username, password=form.profilBase.password)
+            if user is not none:
+                state = 'logged in'
+    else:
+        form = UtilisateurForm()
 
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                state = "You're successfully logged in!"
-            else:
-                state = "Your account is not active, please contact the site admin."
-        else:
-            state = "Your username and/or password were incorrect."
-
-    return render_to_response('login.html',{'state':state, 'username': username})
-
-
+    return render_to_response('login.html',{'message':state, 'form':form})
 
 def main_page(request):
     return render_to_response('index.html')

@@ -1,14 +1,20 @@
 from django.db import models
-from cours.models import ANNEE_ETUDE
-from cours.models import MATIERES
+from django.contrib.auth.models import User
+from django.forms import ModelForm
 
 class Utilisateur(models.Model):
-	nom = models.CharField(max_length=30)
-	prenom = models.Charfield(max_length = 30)
+	profilBase = models.OneToOneField(User, primary_key=True, related_name='profilBaseInUtilisateur')
 	dateNaissance = models.DateField()
-	eMail = models.EmailField()
-	annee = CharField(max_length = 2, choices = ANNEE_ETUDE)
-	competence = CharField(max_length = 2, choices = MATIERES)
-        #historique(cours) -> many-to-one -> utilisateur
+	#competences -> many-to-one-> utilisateur
+    #historique(cours) -> many-to-one -> utilisateur
 	#reponseAnnonce -> many-to-one -> utilisateur
-	
+
+	def __unicode__(self):
+		return (self.profilBase.first_name+" "+self.profilBase.last_name+" @ "+self.profilBase.email)
+
+	def __repr__(self):
+		return self.__unicode__()
+
+class UtilisateurForm(ModelForm):
+	class Meta:
+		model = Utilisateur

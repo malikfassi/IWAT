@@ -1,11 +1,12 @@
 # -*- coding: cp1252 -*-
 from django.db import models
 from login.models import Utilisateur
+from django.forms import ModelForm
 
-MATIERES = (
+Matieres = (
         #Langues
         ('FR', 'Langue Francaise'),
-        ('En', 'Langue Anglaise'),
+        ('EN', 'Langue Anglaise'),
         ('NL', 'Langue Néerlandaise'),
         #sciences
         ('SM', 'Science des Mathématiques'),
@@ -25,7 +26,7 @@ MATIERES = (
         ('RE', 'Religion'),
     )
 
-ANNEE_ETUDE = (
+AnneeEtude = (
         #primaire
         ('P1', '1ére primaire'),
         ('P2', '2ére primaire'),
@@ -48,14 +49,49 @@ ANNEE_ETUDE = (
         ('M2', 'Master 2ére'),
     )
 
-class Cour(models.Model):
-    secteur = models.CharField(max_length=2, choices=MATIERES)
-    anneeSecteur = models.CharField(max_length=2, choices=ANNEE_ETUDE)
+class CourCompetence(models.Model):
+    secteur = models.CharField(max_length=2, choices=Matieres)
+    anneeSecteur = models.CharField(max_length=2, choices = AnneeEtude)
+
+    def __unicode__(self):
+        return self.secteur+self.anneeSecteur
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class CourCompetenceForm(ModelForm):
+    class Meta:
+        model = CourCompetence
+
+
+class CourEvenement(models.Model):
+    sujet = models.ForeignKey(CourCompetence, related_name="Cours(evenement)")
     heure = models.DateTimeField()
     lieu = models.CharField(max_length=200)
-    eleve = ForeignKey(Utilisateur)
-    prof = ForeignKey(Utilisateur)
+    eleve = models.ForeignKey(Utilisateur, related_name="eleve-in-Cour")
+    prof = models.ForeignKey(Utilisateur, related_name="prof-in-Cour")
     
     def __unicode__(self):
         #return("Cours de "+ self.secteur+" "+self.anneeSecteur)
-        return("Eleve : "+eleve.__unicode__()+ " Professeur : " + prof.__unicode__() + " Le " + heure + " à " + lieu)
+        return("Eleve : "+self.eleve.__unicode__()+ " Professeur : " + self.prof.__unicode__() + " Le " + self.heure + " à " + self.lieu)
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class CourEvenementForm(ModelForm):
+    class Meta:
+        model = CourEvenement
+
+
+
+class CourCompetenceUser(CourCompetence):            # |
+    #courcompetenceuser -> many-to-one -> utilisateur v
+    utilisateurCompetent = models.ForeignKey(Utilisateur, related_name="CourCompetenceUser-cours")
+    competence = models.OneToOneField(CourCompetence, related_name="CompetenceInCourCompetenceUser")
+    def __unicode__(self):
+        return self.CourCompetence.__unicode__() + " : " + self.utilisateurCompetent.__unicode__()
+
+class CourCompetenceUserForm(ModelForm):
+    class Meta:
+        model = CourCompetenceUser
+
