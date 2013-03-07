@@ -12,8 +12,8 @@ def login_user(request):
     if request.POST:
         form = UtilisateurForm(request.POST)
         if(form.is_valid()):
-            user = authenticate(username = form.pseudo, password=form.mdp)
-            if user is not none:
+            user = authenticate(username = form.cleaned_data['pseudo'], password=form.cleaned_data['mdp'])
+            if user is not None:
                 state = 'logged in'
     else:
         form = UtilisateurForm()
