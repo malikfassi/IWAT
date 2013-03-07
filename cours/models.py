@@ -73,7 +73,7 @@ class CourEvenement(models.Model):
     
     def __unicode__(self):
         #return("Cours de "+ self.secteur+" "+self.anneeSecteur)
-        return("Eleve : "+self.eleve.__unicode__()+ " Professeur : " + self.prof.__unicode__() + " Le " + self.heure + " à " + self.lieu)
+        return("Eleve : "+self.eleve.__unicode__()+ " Professeur : " + self.prof.__unicode__() + " à " + self.lieu)
 
     def __repr__(self):
         return self.__unicode__()
@@ -85,7 +85,7 @@ class CourEvenementForm(ModelForm):
 
 
 class CourCompetenceUser(CourCompetence):            # |
-    #courcompetenceuser -> many-to-one -> utilisateur v
+    #courcompetenceuser -> many-to-one -> utilisateur  v
     utilisateurCompetent = models.ForeignKey(Utilisateur, related_name="CourCompetenceUser-cours")
     competence = models.OneToOneField(CourCompetence, related_name="CompetenceInCourCompetenceUser")
     def __unicode__(self):

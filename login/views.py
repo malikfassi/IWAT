@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from login.models import UtilisateurForm
+from django.template import RequestContext
 
 def login_user(request):
     state = "Please log in below..."
@@ -11,13 +12,13 @@ def login_user(request):
     if request.POST:
         form = UtilisateurForm(request.POST)
         if(form.is_valid()):
-            user = authenticate(username = form.profilBase.username, password=form.profilBase.password)
+            user = authenticate(username = form.pseudo, password=form.mdp)
             if user is not none:
                 state = 'logged in'
     else:
         form = UtilisateurForm()
-
-    return render_to_response('login.html',{'message':state, 'form':form})
+    c = RequestContext(request,{'message':state, 'form':form})
+    return render_to_response('login.html',c)
 
 def main_page(request):
     return render_to_response('index.html')

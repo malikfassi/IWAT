@@ -11,7 +11,10 @@ body{
 </style>
 </head>
 <body>
-	{{ message }}
-	{{ form }}
+	{{ message }} <br />
+	<form method="post" action="#"><br />
+		{% csrf_token %}
+	{{ form }}<br />
+	<input type="submit" value="confirmer" /><br />
 </body>
 </html>
