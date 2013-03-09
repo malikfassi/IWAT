@@ -16,6 +16,19 @@ class Utilisateur(models.Model):
 	def __repr__(self):
 		return self.__unicode__()
 
-class UtilisateurForm(forms.Form):
+class LoginForm(forms.Form):
 	pseudo = forms.CharField(max_length=75)
 	mdp = forms.CharField(max_length=75)
+
+class UserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		exclude = ("groups", "user_permission", "is_active", "is_superuser", "last_login", "date_joined")
+
+class UtilisateurForm(UserForm):
+	dateNaissanceField
+
+class SignInForm(forms.ModelForm):
+	class meta:
+		model = User
+		exlude = ("profilBase", "dateNaissance")

@@ -51,7 +51,7 @@ AnneeEtude = (
 
 class CourCompetence(models.Model):
     secteur = models.CharField(max_length=2, choices=Matieres)
-    anneeSecteur = models.CharField(max_length=2, choices = AnneeEtude)
+    anneeSecteur = models.CharField(max_length=2, choices=AnneeEtude)
 
     def __unicode__(self):
         return self.secteur+self.anneeSecteur
@@ -79,8 +79,7 @@ class CourEvenement(models.Model):
         return self.__unicode__()
 
 class CourEvenementForm(ModelForm):
-    class Meta:
-        model = CourEvenement
+   sujet = CourCompetenceForm
 
 
 

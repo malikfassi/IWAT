@@ -1,11 +1,13 @@
 from django.db import models
 from cours.models import CourEvenement
-from login.models import Utilisateur
-from django.forms import ModelForm
+from cours.models import CourEvenementForm
+from login.models import Utilisateur, UtilisateurForm
+import django.forms
 
 class Annonce(models.Model):
     contexte = models.OneToOneField(CourEvenement, related_name="contexteInAnnonce")
     posterPar = models.OneToOneField(Utilisateur, related_name="posteurInAnnonce")
+    posterLe = models.DateTimeField()
 
     def __unicode__(self):
         return (self.posterPar.__unicode__()+ " cherche un cour de " + self.contexte.__unicode__())
@@ -13,9 +15,8 @@ class Annonce(models.Model):
     def __repr__(self):
         return self.__unicode__()
 
-class AnnonceForm(ModelForm):
-    class Meta:
-        model = Annonce
+class AnnonceForm(CourEvenementForm, UtilisateurForm):
+    pass
  
 class Notification(models.Model):
     emetteur = models.ForeignKey(Utilisateur, related_name="emetteurInNotification")
